@@ -16,6 +16,7 @@ def run():
 
     hero = Hero(700, 100, 176, 128, speed= 5, color= (23,114, 9), image= hero_images)
     bg = BackGround(bg_image, 0.5)
+    menu = Menu()
     boss = None
     font_kill = pygame.font.Font(None, 40)
     #bot = Bot(500, 0 - 48, 50,50, speed= 1, image= bot_images)
@@ -26,6 +27,7 @@ def run():
         bg.move(window)
         
         if which_window == 0:
+            
 
             x = 10
             for hp in range(hero.HP):
@@ -33,7 +35,7 @@ def run():
                 x += 47
 
             #HERO
-            hero.move(window)
+            hero.move(window, pygame.key.get_pressed())
             hero.move_bullet(window, boss)
             window.blit(font_kill.render(
                 f"SCORE: {hero.KILL}", True, (0, 0, 0)), (setting_win["WIDTH"] - 180, 10))
@@ -54,7 +56,7 @@ def run():
                 bot.move_bullet(window, hero)
 
             #BOSS
-            if hero.KILL_BOT_LVL >= 3:
+            if hero.KILL_BOT_LVL >= 1:
                 if not boss:
                     boss = Boss(setting_win["WIDTH"] // 2 - setting_boss["WIDTH"] // 2,
                                 - setting_boss["HEIGHT"],
@@ -71,7 +73,7 @@ def run():
                     if hero.KILL_BOSS == 2:
                         hero.KILL_BOSS = 0
                         lvl.LVL += 1
-                        lvl.next_level(window)
+                        #lvl.next_level(window)
                         which_window = 1
                         time_start = pygame.time.get_ticks()
 
@@ -82,29 +84,39 @@ def run():
             for event in events:
                
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_w:
-                        hero.MOVE["UP"] = True
-                    if event.key == pygame.K_s:
-                        hero.MOVE["DOWN"] = True
-                    if event.key == pygame.K_a:
-                        hero.MOVE["LEFT"] = True
-                    if event.key == pygame.K_d:
-                        hero.MOVE["RIGHT"] = True
+                    #if event.key == pygame.K_w:
+                    #    hero.MOVE["UP"] = True
+                    #if event.key == pygame.K_s:
+                    #    hero.MOVE["DOWN"] = True
+                    #if event.key == pygame.K_a:
+                    #    hero.MOVE["LEFT"] = True
+                    #if event.key == pygame.K_d:
+                    #    hero.MOVE["RIGHT"] = True
                     if event.key == pygame.K_SPACE:
                         hero.BULLETS.append(Bullet(bullet_image, 8, x= hero.x + hero.width // 2 - 27, y= hero.y, width= 10, height= 20))
                         hero.BULLETS.append(Bullet(bullet_image, 8, x= hero.x + hero.width // 2 + 18, y= hero.y, width= 10, height= 20))
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_w:
-                        hero.MOVE["UP"] = False
-                    if event.key == pygame.K_s:
-                        hero.MOVE["DOWN"] = False
-                    if event.key == pygame.K_a:
-                        hero.MOVE["LEFT"] = False
-                    if event.key == pygame.K_d:
-                        hero.MOVE["RIGHT"] = False
+                #if event.type == pygame.KEYUP:
+                #    if event.key == pygame.K_w:
+                #        hero.MOVE["UP"] = False
+                #    if event.key == pygame.K_s:
+                #        hero.MOVE["DOWN"] = False
+                #    if event.key == pygame.K_a:
+                #        hero.MOVE["LEFT"] = False
+                #    if event.key == pygame.K_d:
+                #        hero.MOVE["RIGHT"] = False
         
         elif which_window == 1:
-            pass
+            menu.draw_menu(window)
+            for event in events:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    x, y = event.pos
+                    if menu.BUTTON1.collidepoint(x, y):
+                        which_window = 2
+                    elif menu.BUTTON2.collidepoint(x, y):
+                        game = False
+        elif which_window == 2:
+            lvl.next_level(window)
+            which_window = 0
 
 
 

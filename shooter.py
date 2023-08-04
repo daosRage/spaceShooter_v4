@@ -3,7 +3,23 @@ from data import *
 from time import sleep
 
 class Menu():
-    pass
+    def __init__(self):
+        height =  60
+        self.BUTTON1 = pygame.Rect(setting_win["WIDTH"] // 2 - 200 - 30,
+                                   setting_win["HEIGHT"] // 2,
+                                   200, height)
+        self.BUTTON2 = pygame.Rect(setting_win["WIDTH"] // 2 + 30,
+                                   setting_win["HEIGHT"] // 2,
+                                   200, height)
+        self.RENDER1 = pygame.font.Font(None, 40).render("Продовжити", True, (0,0,0))
+        self.RENDER2 = pygame.font.Font(None, 40).render("Вийти", True, (0,0,0))
+    
+    def draw_menu(self, window):
+        pygame.draw.rect(window, (100, 143, 255), self.BUTTON1)
+        pygame.draw.rect(window, (100, 143, 255), self.BUTTON2)
+        window.blit(self.RENDER1, (self.BUTTON1.x + 10, self.BUTTON1.y + 15))
+        window.blit(self.RENDER2, (self.BUTTON2.x + 60, self.BUTTON2.y + 15))
+        print(self.BUTTON1.x, self.BUTTON2.x)
 
 class BackGround():
     def __init__(self, image, speed):
@@ -68,14 +84,14 @@ class Hero(Sprite):
         self.KILL_BOT_LVL = 0
         self.KILL_BOSS = 0
 
-    def move(self, window):
-        if self.MOVE["UP"] and self.y > 0:
+    def move(self, window, key):
+        if key[pygame.K_w] and self.y > 0:
             self.y -= self.SPEED
-        elif self.MOVE["DOWN"] and self.y + self.height < setting_win["HEIGHT"]:
+        elif key[pygame.K_s] and self.y + self.height < setting_win["HEIGHT"]:
             self.y += self.SPEED
-        if self.MOVE["LEFT"] and self.x > 0:
+        if key[pygame.K_a] and self.x > 0:
             self.x -= self.SPEED
-        elif self.MOVE["RIGHT"] and self.x + self.width < setting_win["WIDTH"]:
+        elif key[pygame.K_d] and self.x + self.width < setting_win["WIDTH"]:
             self.x += self.SPEED
         self.move_image()
         window.blit(self.IMAGE, (self.x, self.y))
